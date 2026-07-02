@@ -1,0 +1,30 @@
+{
+  "contactFormData": {
+    "fullName": "John Doe",
+    "phone": "+216 12 345 678",
+    "email": "john.doe@example.com",
+    "education": "Bachelor of Computer Science",
+    "university": "University of Tunis",
+    "program": "Master's in Italy",
+    "message": "I would like to know more about the visa process and university applications."
+  },
+  "contactEmailTemplateParams": {
+    "from_name": "John Doe",
+    "from_email": "john.doe@example.com",
+    "phone": "+216 12 345 678",
+    "education": "Bachelor of Computer Science",
+    "university": "University of Tunis",
+    "program": "Master's in Italy",
+    "message": "I would like to know more about the visa process and university applications.",
+    "to_email": "universoitalia.tn@gmail.com",
+    "reply_to": "john.doe@example.com"
+  },
+  "newsletterFormData": {
+    "email": "john.doe@example.com"
+  },
+  "newsletterEmailTemplateParams": {
+    "subscriber_email": "john.doe@example.com",
+    "to_email": "universoitalia.tn@gmail.com",
+    "message": "Nouvelle inscription à la newsletter: john.doe@example.com"
+  }
+}
