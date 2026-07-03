@@ -1,8 +1,8 @@
 import { motion, useInView } from 'framer-motion';
 import { 
   TrendingUp, Users, Award, Clock, Sparkles, 
-  Zap, Crown, Rocket, Target, BarChart,
-  Globe, Shield, CheckCircle, Star 
+  Target, BarChart,
+  Globe, Shield, Star 
 } from 'lucide-react';
 import { statisticsContent } from '../data/content';
 import { useEffect, useRef, useState } from 'react';
@@ -65,7 +65,6 @@ const StatCard: React.FC<{
   isVisible: boolean;
 }> = ({ stat, index, isVisible }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const Icon = stat.icon;
   
   // Get dynamic icon styling
   const getIconStyle = (label: string) => {
@@ -517,7 +516,7 @@ const AnimatedCounter: React.FC<{
   suffix?: string;
   label?: string;
   delay?: number;
-}> = ({ end, suffix = '', label = '', delay = 0 }) => {
+}> = ({ end, suffix = '' }) => {
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: '-50px' });

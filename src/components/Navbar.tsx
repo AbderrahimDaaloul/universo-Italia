@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Menu, X, GraduationCap, Sparkles, ChevronDown, 
-  Home, Info, Briefcase, Award, Mail, Phone, 
+  Menu, X, GraduationCap, Sparkles, 
+  Home, Info, Briefcase, Award, Mail, 
   Globe, Users, Star, Zap 
 } from 'lucide-react';
 import { navLinks } from '../data/content';
@@ -19,7 +19,6 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeLink, setActiveLink] = useState('');
-  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -100,8 +99,6 @@ const Navbar = () => {
         `}
         role="navigation"
         aria-label="Navigation principale"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
       >
         {/* Animated Gradient Background */}
         <motion.div
