@@ -5,7 +5,7 @@ export default defineConfig({
     base: '/universo-Italia/',
     server: {
         port: 3000,
-        open: true,
+        open: '/universo-Italia/',
     },
     build: {
         sourcemap: true,
