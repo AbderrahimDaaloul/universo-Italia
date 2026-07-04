@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion';
+import { motion, useAnimationControls } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 import {
   CheckCircle,
   ArrowRight,
@@ -6,12 +7,154 @@ import {
   Users,
   Globe,
   GraduationCap,
-  Star,
   Sparkles,
   MapPin,
 } from 'lucide-react';
 import { aboutContent } from '../data/content';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
+import bicoccaImg from '../assets/bicocca.png';
+import unitoImg from '../assets/unito.png';
+import unimiImg from '../assets/unimi.png';
+
+/**
+ * Auto-flipping 3D card cycling through 3 Italian universities.
+ * Photo 1 holds ~2.5s, then flips; the others hold ~4.5s. Pauses on hover.
+ * Swap-at-edge technique gives a true continuous flip (no mirrored frames).
+ */
+const UNIVERSITY_PHOTOS = [
+  {
+    src: bicoccaImg,
+    alt: 'Università degli Studi di Milano-Bicocca',
+  },
+  {
+    src: unitoImg,
+    alt: 'Università degli Studi di Torino',
+  },
+  {
+    src: unimiImg,
+    alt: 'Università degli Studi di Messina',
+  },
+];
+
+const FlippingUniversityCard = () => {
+  const controls = useAnimationControls();
+  const [idx, setIdx] = useState(0);
+  const idxRef = useRef(0);
+  const pausedRef = useRef(false);
+
+  useEffect(() => {
+    let active = true;
+    const wait = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+
+    const loop = async () => {
+      while (active) {
+        // Photo 1 holds a touch shorter than the rest
+        await wait(idxRef.current === 0 ? 2500 : 4500);
+        while (pausedRef.current && active) await wait(150);
+        if (!active) return;
+        try {
+          // turn edge-on (image foreshortens away)
+          await controls.start({ rotateY: 90, transition: { duration: 0.4, ease: [0.4, 0, 1, 1] } });
+          // swap the photo while invisible, then complete the flip from the other side
+          const nextIdx = (idxRef.current + 1) % UNIVERSITY_PHOTOS.length;
+          idxRef.current = nextIdx;
+          setIdx(nextIdx);
+          controls.set({ rotateY: -90 });
+          await controls.start({ rotateY: 0, transition: { duration: 0.4, ease: [0, 0, 0.2, 1] } });
+        } catch {
+          return; // controls unmounted mid-animation
+        }
+      }
+    };
+
+    loop();
+    return () => {
+      active = false;
+    };
+  }, [controls]);
+
+  const photo = UNIVERSITY_PHOTOS[idx];
+
+  return (
+    <div className="relative pb-14 sm:pb-16">
+      <div
+        className="relative rounded-3xl overflow-hidden shadow-2xl group"
+        style={{ perspective: '1400px' }}
+        onMouseEnter={() => {
+          pausedRef.current = true;
+        }}
+        onMouseLeave={() => {
+          pausedRef.current = false;
+        }}
+      >
+        {/* Flipping photo layer */}
+        <motion.div
+          animate={controls}
+          style={{ transformOrigin: 'center', backfaceVisibility: 'hidden' }}
+          className="relative w-full h-[300px] sm:h-[380px] will-change-transform"
+        >
+          <img
+            src={photo.src}
+            alt={photo.alt}
+            className="w-full h-full object-cover"
+            style={{ backfaceVisibility: 'hidden' }}
+          />
+        </motion.div>
+
+        {/* Gradient overlay for readability + Italian flag accent */}
+        <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-primary-900/80 via-primary-900/20 to-transparent" />
+        <div className="absolute top-0 left-0 w-full h-1.5 flex pointer-events-none">
+          <div className="flex-1 bg-italian-green" />
+          <div className="flex-1 bg-white" />
+          <div className="flex-1 bg-italian-red" />
+        </div>
+
+        {/* University name caption */}
+        <div className="absolute top-5 left-5 pointer-events-none">
+          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/35 backdrop-blur-sm border border-white/20 text-white text-xs font-medium shadow-lg">
+            <span className="flex h-3 w-1 flex-col overflow-hidden rounded-full">
+              <span className="flex-1 bg-italian-green" />
+              <span className="flex-1 bg-white" />
+              <span className="flex-1 bg-italian-red" />
+            </span>
+            {photo.alt.split('—')[0].trim()}
+          </span>
+        </div>
+      </div>
+
+      {/* Stat cards straddling the bottom edge — the image border runs
+          through their vertical center */}
+      <div className="absolute inset-x-0 bottom-14 sm:bottom-16 translate-y-1/2 px-6">
+        <div className="grid grid-cols-3 gap-3">
+          <motion.div
+            whileHover={{ y: -4 }}
+            className="glass rounded-2xl p-4 text-center backdrop-blur-md bg-white/95 shadow-xl ring-1 ring-primary-100"
+          >
+            <Award className="w-7 h-7 text-primary-600 mx-auto mb-1.5" />
+            <div className="text-xl font-bold text-primary-700">8+</div>
+            <div className="text-[11px] text-gray-600 mt-0.5 leading-tight">Ans d'Expérience</div>
+          </motion.div>
+          <motion.div
+            whileHover={{ y: -4 }}
+            className="glass rounded-2xl p-4 text-center backdrop-blur-md bg-white/95 shadow-xl ring-1 ring-primary-100"
+          >
+            <Users className="w-7 h-7 text-primary-600 mx-auto mb-1.5" />
+            <div className="text-xl font-bold text-primary-700">500+</div>
+            <div className="text-[11px] text-gray-600 mt-0.5 leading-tight">Étudiants Satisfaits</div>
+          </motion.div>
+          <motion.div
+            whileHover={{ y: -4 }}
+            className="glass rounded-2xl p-4 text-center backdrop-blur-md bg-white/95 shadow-xl ring-1 ring-primary-100"
+          >
+            <Globe className="w-7 h-7 text-primary-600 mx-auto mb-1.5" />
+            <div className="text-xl font-bold text-primary-700">50+</div>
+            <div className="text-[11px] text-gray-600 mt-0.5 leading-tight">Universités Partenaires</div>
+          </motion.div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 /**
  * About Section
@@ -90,91 +233,13 @@ const About = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="relative"
           >
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl group">
-              {/* Main photo */}
-              <img
-                src="https://plantisima.com/wp-content/uploads/2024/12/University-of-Bologna-Italy.jpg.webp"
-                alt="Campus universitaire en Italie"
-                className="w-full h-[380px] object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              {/* Gradient overlay for readability + Italian flag colors accent */}
-              <div className="absolute inset-0 bg-gradient-to-t from-primary-900/80 via-primary-900/20 to-transparent" />
-              <div className="absolute top-0 left-0 w-full h-1.5 flex">
-                <div className="flex-1 bg-italian-green" />
-                <div className="flex-1 bg-white" />
-                <div className="flex-1 bg-italian-red" />
-              </div>
+            <FlippingUniversityCard />
 
-              {/* Overlaid stat cards */}
-              <div className="absolute bottom-0 left-0 right-0 p-6">
-                <div className="grid grid-cols-3 gap-3">
-                  <motion.div
-                    whileHover={{ y: -4 }}
-                    className="glass rounded-2xl p-4 text-center backdrop-blur-md bg-white/90"
-                  >
-                    <Award className="w-7 h-7 text-primary-600 mx-auto mb-1.5" />
-                    <div className="text-xl font-bold text-primary-700">8+</div>
-                    <div className="text-[11px] text-gray-600 mt-0.5 leading-tight">
-                      Ans d'Expérience
-                    </div>
-                  </motion.div>
-                  <motion.div
-                    whileHover={{ y: -4 }}
-                    className="glass rounded-2xl p-4 text-center backdrop-blur-md bg-white/90"
-                  >
-                    <Users className="w-7 h-7 text-primary-600 mx-auto mb-1.5" />
-                    <div className="text-xl font-bold text-primary-700">500+</div>
-                    <div className="text-[11px] text-gray-600 mt-0.5 leading-tight">
-                      Étudiants Satisfaits
-                    </div>
-                  </motion.div>
-                  <motion.div
-                    whileHover={{ y: -4 }}
-                    className="glass rounded-2xl p-4 text-center backdrop-blur-md bg-white/90"
-                  >
-                    <Globe className="w-7 h-7 text-primary-600 mx-auto mb-1.5" />
-                    <div className="text-xl font-bold text-primary-700">50+</div>
-                    <div className="text-[11px] text-gray-600 mt-0.5 leading-tight">
-                      Universités Partenaires
-                    </div>
-                  </motion.div>
-                </div>
-              </div>
-            </div>
-
-            {/* Small floating secondary photo */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.85, rotate: -6 }}
-              animate={
-                isVisible
-                  ? { opacity: 1, scale: 1, rotate: -6 }
-                  : { opacity: 0, scale: 0.85, rotate: -6 }
-              }
-              transition={{ duration: 0.6, delay: 0.5 }}
-              whileHover={{ rotate: 0, scale: 1.05 }}
-              className="hidden md:block absolute -top-8 -left-8 w-32 h-32 rounded-2xl overflow-hidden shadow-xl border-4 border-white"
-            >
-              <img
-                src="https://www.continents.us/wp-content/uploads/2024/01/Studying-Abroad-Made-Simple-OTHM-Guide-International-Students-1024x585.jpg"
-                alt="Étudiants internationaux"
-                className="w-full h-full object-cover"
-              />
-            </motion.div>
-
+           
            
 
             {/* Rating badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-              transition={{ duration: 0.5, delay: 0.7 }}
-              className="hidden lg:flex absolute top-6 right-6 items-center gap-1 bg-white/95 backdrop-blur rounded-full px-3 py-1.5 shadow-lg"
-            >
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} size={13} className="fill-yellow-400 text-yellow-400" />
-              ))}
-              <span className="text-xs font-semibold text-gray-700 ml-1">4.9/5</span>
-            </motion.div>
+           
           </motion.div>
 
           {/* Right - Text Content */}
@@ -241,6 +306,10 @@ const About = () => {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.98 }}
               href={aboutContent.cta.href}
+              onClick={(e) => {
+                e.preventDefault();
+                document.querySelector(aboutContent.cta.href)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }}
               className="btn-primary group inline-flex shadow-lg shadow-primary-600/20 hover:shadow-primary-600/40 transition-shadow"
             >
               {aboutContent.cta.text}

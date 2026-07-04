@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Menu, X, GraduationCap, Sparkles, 
-  Home, Info, Briefcase, Award, Mail, 
-  Globe, Users, Star, Zap 
+import {
+  Menu, X, Sparkles,
+  Home, Info, Briefcase, Award, Mail, Star
 } from 'lucide-react';
 import { navLinks } from '../data/content';
+import logo1 from '../assets/logo1.png';
 
 // Enhanced constants
-const NAVBAR_HEIGHT = 80;
+const NAVBAR_HEIGHT = 96;
 const SCROLL_THRESHOLD = 20;
 
 /**
@@ -92,33 +92,33 @@ const Navbar = () => {
         className={`
           fixed top-0 left-0 right-0 z-50
           transition-all duration-500
-          ${scrolled 
-            ? 'bg-white/90 backdrop-blur-xl shadow-2xl border-b border-white/20' 
+          ${scrolled
+            ? 'bg-[#072A18]/85 backdrop-blur-xl shadow-2xl shadow-black/40 border-b border-white/10'
             : 'bg-transparent'
           }
         `}
         role="navigation"
         aria-label="Navigation principale"
       >
-        {/* Animated Gradient Background */}
+        {/* Animated Gradient Background — blends into hero at top, frosted burgundy when scrolled */}
         <motion.div
           className="absolute inset-0 -z-10"
           animate={{
-            background: scrolled 
-              ? 'linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85))'
-              : 'linear-gradient(135deg, rgba(0,0,0,0.2), rgba(0,0,0,0.05))',
+            background: scrolled
+              ? 'linear-gradient(135deg, rgba(13,61,36,0.92), rgba(7,42,24,0.82))'
+              : 'linear-gradient(180deg, rgba(2,16,10,0.35), rgba(2,16,10,0))',
           }}
           transition={{ duration: 0.5 }}
         />
 
-        {/* Glowing Border Effect */}
+        {/* Glowing Border Effect — Italian tricolore */}
         <motion.div
           className="absolute bottom-0 left-0 right-0 h-[2px]"
           animate={{
             background: scrolled
-              ? 'linear-gradient(90deg, transparent, #6366F1, #8B5CF6, #EC4899, transparent)'
+              ? 'linear-gradient(90deg, transparent, #008C45, #FFFFFF, #CD212A, transparent)'
               : 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
-            opacity: scrolled ? 1 : 0.5,
+            opacity: scrolled ? 1 : 0.4,
           }}
           transition={{ duration: 0.5 }}
         />
@@ -130,7 +130,7 @@ const Navbar = () => {
               key={i}
               className="absolute w-1 h-1 rounded-full"
               style={{
-                background: `radial-gradient(circle, ${i % 2 === 0 ? '#6366F1' : '#8B5CF6'}, transparent)`,
+                background: `radial-gradient(circle, ${i % 2 === 0 ? '#008C45' : '#CD212A'}, transparent)`,
                 left: `${10 + i * 15}%`,
                 top: `${20 + Math.random() * 60}%`,
               }}
@@ -164,7 +164,7 @@ const Navbar = () => {
             >
               {/* Logo Glow Effect */}
               <motion.div
-                className="absolute -inset-4 rounded-2xl bg-primary-500/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                className="absolute -inset-4 rounded-2xl bg-primary-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                 animate={{
                   scale: [1, 1.1, 1],
                 }}
@@ -175,57 +175,19 @@ const Navbar = () => {
               />
 
               <motion.div
-                className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-primary-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg shadow-primary-500/25 group-hover:shadow-primary-500/40 transition-all duration-300"
-                whileHover={{ 
+                className="relative w-24 h-16 lg:w-36 lg:h-20 flex items-center justify-center transition-all duration-300"
+                whileHover={{
                   rotate: [0, -5, 5, 0],
                   scale: 1.1,
                 }}
                 transition={{ duration: 0.5 }}
               >
-                <GraduationCap className="w-7 h-7 text-white" />
-                
-                {/* Logo Pulse Animation */}
-                <motion.div
-                  className="absolute inset-0 rounded-2xl border-2 border-white/20"
-                  animate={{
-                    scale: [1, 1.3, 1],
-                    opacity: [0.5, 0, 0.5],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
+                <img
+                  src={logo1}
+                  alt="Logo UniversoItalia"
+                  className="w-full h-full object-contain"
                 />
               </motion.div>
-
-              <div className="flex flex-col">
-                <motion.span
-                  className={`text-2xl font-extrabold font-heading tracking-tight transition-colors ${
-                    scrolled ? 'text-gray-900' : 'text-white'
-                  }`}
-                  whileHover={{ x: 5 }}
-                >
-                  Universo
-                  <span className="bg-gradient-to-r from-primary-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-                    Italia
-                  </span>
-                </motion.span>
-                <motion.span
-                  className={`text-[10px] font-medium tracking-widest uppercase ${
-                    scrolled ? 'text-gray-400' : 'text-white/60'
-                  }`}
-                  animate={{
-                    opacity: [0.6, 1, 0.6],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                  }}
-                >
-                  Excellence & Innovation
-                </motion.span>
-              </div>
             </motion.a>
 
             {/* Desktop Navigation with Enhanced Links */}
@@ -242,16 +204,13 @@ const Navbar = () => {
                       e.preventDefault();
                       handleNavClick(link.href);
                     }}
+                    data-active={isActive}
                     className={`
-                      relative px-5 py-2.5 rounded-xl font-medium transition-all duration-300
+                      nav-underline relative px-5 py-2.5 rounded-xl font-medium tracking-wide transition-all duration-300
                       flex items-center gap-2
-                      ${scrolled 
-                        ? 'text-gray-700 hover:text-primary-600' 
-                        : 'text-white/90 hover:text-white'
-                      }
-                      ${isActive ? 'text-primary-600' : ''}
+                      ${isActive ? 'text-primary-300' : 'text-parchment/85 hover:text-primary-200'}
                     `}
-                    whileHover={{ 
+                    whileHover={{
                       scale: 1.05,
                       y: -2,
                     }}
@@ -259,21 +218,10 @@ const Navbar = () => {
                   >
                     <Icon className="w-4 h-4" />
                     {link.label}
-                    
-                    {/* Active Indicator */}
-                    {isActive && (
-                      <motion.div
-                        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-0.5 bg-gradient-to-r from-primary-500 to-purple-500 rounded-full"
-                        layoutId="activeIndicator"
-                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                      />
-                    )}
-                    
+
                     {/* Hover Background Effect */}
                     <motion.div
-                      className={`absolute inset-0 rounded-xl -z-10 ${
-                        scrolled ? 'bg-primary-50/50' : 'bg-white/10'
-                      }`}
+                      className="absolute inset-0 rounded-xl -z-10 bg-primary-500/10"
                       initial={{ opacity: 0, scale: 0.8 }}
                       whileHover={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.2 }}
@@ -291,22 +239,15 @@ const Navbar = () => {
                   e.preventDefault();
                   handleNavClick('#contact');
                 }}
-                className={`
-                  relative px-6 py-3 rounded-xl font-semibold
-                  overflow-hidden group
-                  ${scrolled
-                    ? 'bg-gradient-to-r from-primary-600 to-purple-600 text-white shadow-lg shadow-primary-500/25 hover:shadow-primary-500/40'
-                    : 'bg-white/20 backdrop-blur-sm text-white border border-white/30 hover:bg-white/30'
-                  }
-                `}
+                className="relative px-6 py-3 rounded-full font-semibold overflow-hidden group text-primary-800 bg-white shadow-lg shadow-black/20 hover:shadow-white/30 transition-shadow border border-white/60"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
                 {/* Button Shine Effect */}
-                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-200/50 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+
                 <span className="relative flex items-center gap-2">
-                  <Sparkles className="w-4 h-4" />
+                  <Sparkles className="w-4 h-4 text-italian-red" />
                   <span>Commencer</span>
                 </span>
               </motion.a>
@@ -317,11 +258,8 @@ const Navbar = () => {
               onClick={() => setIsOpen(!isOpen)}
               className={`
                 lg:hidden relative p-3 rounded-xl transition-all duration-300
-                ${scrolled 
-                  ? 'text-gray-900 hover:bg-primary-50' 
-                  : 'text-white hover:bg-white/10'
-                }
-                ${isOpen ? 'bg-primary-50 text-primary-600' : ''}
+                text-parchment hover:bg-primary-500/10
+                ${isOpen ? 'bg-primary-500/15 text-primary-200' : ''}
               `}
               aria-label={isOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
               aria-expanded={isOpen}
@@ -338,7 +276,7 @@ const Navbar = () => {
               {/* Notification Dot */}
               {!isOpen && (
                 <motion.span
-                  className="absolute top-1 right-1 w-2 h-2 bg-primary-500 rounded-full"
+                  className="absolute top-1 right-1 w-2 h-2 bg-italian-red rounded-full"
                   animate={{
                     scale: [1, 1.5, 1],
                     opacity: [1, 0.5, 1],
@@ -380,32 +318,29 @@ const Navbar = () => {
               stiffness: 200,
               opacity: { duration: 0.3 }
             }}
-            className="fixed top-0 right-0 bottom-0 w-96 max-w-[90vw] z-50 bg-gradient-to-br from-white via-gray-50 to-purple-50/30 shadow-2xl lg:hidden overflow-hidden"
+            className="fixed top-0 right-0 bottom-0 w-96 max-w-[90vw] z-50 bg-gradient-to-b from-[#0D3D24] via-[#072A18] to-[#02100A] backdrop-blur-xl border-l border-white/10 shadow-2xl lg:hidden overflow-hidden"
             role="dialog"
             aria-modal="true"
             aria-label="Menu mobile"
           >
+            {/* Tricolore accent on the leading edge */}
+            <div className="absolute top-0 left-0 h-full w-1 flex flex-col z-20">
+              <span className="flex-1 bg-italian-green" />
+              <span className="flex-1 bg-white" />
+              <span className="flex-1 bg-italian-red" />
+            </div>
+
             {/* Decorative Background */}
             <div className="absolute inset-0 pointer-events-none">
               <motion.div
-                className="absolute -top-32 -right-32 w-64 h-64 bg-gradient-to-br from-primary-500/10 to-purple-500/10 rounded-full blur-3xl"
-                animate={{
-                  scale: [1, 1.2, 1],
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                }}
+                className="absolute -top-32 -right-32 w-64 h-64 bg-primary-500/20 rounded-full blur-3xl"
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 4, repeat: Infinity }}
               />
               <motion.div
-                className="absolute -bottom-32 -left-32 w-64 h-64 bg-gradient-to-br from-pink-500/10 to-orange-500/10 rounded-full blur-3xl"
-                animate={{
-                  scale: [1.2, 1, 1.2],
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                }}
+                className="absolute -bottom-32 -left-32 w-64 h-64 bg-accent-600/12 rounded-full blur-3xl"
+                animate={{ scale: [1.2, 1, 1.2] }}
+                transition={{ duration: 4, repeat: Infinity }}
               />
             </div>
 
@@ -417,16 +352,16 @@ const Navbar = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 }}
                 >
-                  <span className="text-2xl font-extrabold font-heading bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent">
+                  <span className="text-2xl font-extrabold font-heading text-cream-shimmer bg-size-200">
                     Menu
                   </span>
-                  <span className="block text-xs text-gray-400 font-medium tracking-widest uppercase">
+                  <span className="block text-xs text-parchment/60 font-medium tracking-widest uppercase">
                     Navigation
                   </span>
                 </motion.div>
                 <motion.button
                   onClick={() => setIsOpen(false)}
-                  className="p-3 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-all"
+                  className="p-3 rounded-xl text-parchment/80 hover:bg-white/10 hover:text-white transition-all"
                   aria-label="Fermer le menu"
                   whileHover={{ scale: 1.1, rotate: 90 }}
                   whileTap={{ scale: 0.9 }}
@@ -460,14 +395,14 @@ const Navbar = () => {
                           }}
                           className={`
                             flex items-center gap-4 px-5 py-4 rounded-2xl
-                            text-gray-700 font-medium hover:text-primary-600
+                            text-parchment/85 font-medium tracking-wide hover:text-white
                             transition-all duration-300 group
-                            ${activeLink === link.href 
-                              ? 'bg-gradient-to-r from-primary-50 to-purple-50 text-primary-600' 
-                              : 'hover:bg-gray-50'
+                            ${activeLink === link.href
+                              ? 'bg-white/10 text-white'
+                              : 'hover:bg-white/5'
                             }
                           `}
-                          whileHover={{ 
+                          whileHover={{
                             x: 10,
                             scale: 1.02,
                             transition: { type: "spring", stiffness: 400 }
@@ -478,8 +413,8 @@ const Navbar = () => {
                             className={`
                               w-10 h-10 rounded-xl flex items-center justify-center
                               ${activeLink === link.href
-                                ? 'bg-gradient-to-r from-primary-600 to-purple-600 text-white'
-                                : 'bg-gray-100 text-gray-500 group-hover:bg-primary-100 group-hover:text-primary-600'
+                                ? 'bg-gradient-to-br from-primary-500 to-primary-700 text-white'
+                                : 'bg-white/10 text-parchment/70 group-hover:bg-primary-600 group-hover:text-white'
                               }
                               transition-all duration-300
                             `}
@@ -489,10 +424,10 @@ const Navbar = () => {
                             <Icon className="w-5 h-5" />
                           </motion.div>
                           <span>{link.label}</span>
-                          
+
                           {activeLink === link.href && (
                             <motion.div
-                              className="ml-auto w-2 h-2 rounded-full bg-primary-500"
+                              className="ml-auto w-2 h-2 rounded-full bg-italian-red"
                               animate={{
                                 scale: [1, 1.5, 1],
                               }}
@@ -509,57 +444,27 @@ const Navbar = () => {
                 </ul>
               </nav>
 
-              {/* Mobile Footer with CTA and Social */}
+              {/* Mobile Footer — CTA only */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="space-y-4"
               >
-                {/* CTA Button */}
+                {/* CTA Button — matches desktop white pill */}
                 <motion.a
                   href="#contact"
                   onClick={(e) => {
                     e.preventDefault();
                     handleNavClick('#contact');
                   }}
-                  className="w-full inline-flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-gradient-to-r from-primary-600 to-purple-600 text-white font-semibold shadow-lg shadow-primary-500/25 hover:shadow-primary-500/40 transition-all"
+                  className="relative w-full inline-flex items-center justify-center gap-3 px-6 py-4 rounded-full bg-white text-primary-800 font-semibold border border-white/60 shadow-lg shadow-black/20 hover:shadow-white/30 overflow-hidden group transition-shadow"
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                 >
-                  <Sparkles className="w-5 h-5" />
-                  <span>Commencer votre projet</span>
+                  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-200/50 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                  <Sparkles className="relative w-5 h-5 text-italian-red" />
+                  <span className="relative">Commencer votre projet</span>
                 </motion.a>
-
-                {/* Social Links */}
-                <div className="flex items-center justify-center gap-3 pt-4 border-t border-gray-200">
-                  {[
-                    { icon: Globe, label: 'Website' },
-                    { icon: Users, label: 'Community' },
-                    { icon: Star, label: 'Reviews' },
-                    { icon: Zap, label: 'Updates' },
-                  ].map((social, index) => (
-                    <motion.a
-                      key={index}
-                      href="#"
-                      className="w-10 h-10 rounded-xl bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-primary-100 hover:text-primary-600 transition-all"
-                      whileHover={{ 
-                        scale: 1.15,
-                        y: -2,
-                        rotate: [0, -5, 5, 0],
-                      }}
-                      whileTap={{ scale: 0.9 }}
-                      aria-label={social.label}
-                    >
-                      <social.icon className="w-4 h-4" />
-                    </motion.a>
-                  ))}
-                </div>
-
-                {/* Version Info */}
-                <p className="text-center text-xs text-gray-400 font-medium">
-                  © 2024 UniversoItalia • v2.0.0
-                </p>
               </motion.div>
             </div>
           </motion.div>

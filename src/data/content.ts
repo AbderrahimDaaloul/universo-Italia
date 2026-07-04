@@ -70,7 +70,7 @@ export const servicesContent = {
       title: 'Candidature Universitaire',
       description:
         'Soutien complet pour sélectionner et postuler aux meilleures universités italiennes selon votre profil académique, vos objectifs de carrière et vos préférences personnelles. Nous gérons toute la correspondance avec les établissements.',
-      image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9d4?auto=format&fit=crop&w=800&q=80',
+      image: 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=800&q=80',
     },
     {
       id: 2,

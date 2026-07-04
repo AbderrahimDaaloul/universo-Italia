@@ -11,10 +11,10 @@ const VIEWPORT_MARGIN = '-50px';
 
 // Gradient color schemes for cards
 const cardGradients = {
-  popular: 'from-violet-600 via-purple-600 to-indigo-700',
-  starter: 'from-blue-50 via-cyan-50 to-white',
-  professional: 'from-indigo-50 via-purple-50 to-white',
-  enterprise: 'from-violet-50 via-fuchsia-50 to-white',
+  popular: 'from-primary-600 via-primary-700 to-primary-800',
+  starter: 'from-primary-50 via-cream-100 to-white',
+  professional: 'from-cream-100 via-primary-50 to-white',
+  enterprise: 'from-accent-50 via-cream-100 to-white',
 };
 
 // Icon mapping
@@ -79,7 +79,7 @@ const PricingCard: React.FC<{ plan: PricingPlan; index: number }> = ({ plan, ind
           : `bg-gradient-to-br ${getGradient()} border-2 border-gray-200/50 shadow-xl backdrop-blur-sm`
         }
         ${plan.popular ? 'scale-105 lg:scale-110' : ''}
-        ${isGlowing && plan.popular ? 'shadow-[0_0_40px_rgba(139,92,246,0.4)]' : ''}
+        ${isGlowing && plan.popular ? 'shadow-[0_0_40px_rgba(0,140,69,0.45)]' : ''}
         ${!plan.popular && isHovered ? 'border-primary-300 shadow-2xl shadow-primary-200/30' : ''}
       `}
       role="article"
@@ -92,7 +92,7 @@ const PricingCard: React.FC<{ plan: PricingPlan; index: number }> = ({ plan, ind
           animate={{ opacity: isHovered ? 0.3 : 0 }}
           transition={{ duration: 0.6 }}
           style={{
-            background: 'radial-gradient(circle at 50% 50%, rgba(139,92,246,0.6), transparent 70%)',
+            background: 'radial-gradient(circle at 50% 50%, rgba(23,181,106,0.55), transparent 70%)',
           }}
         />
       )}
@@ -132,10 +132,10 @@ const PricingCard: React.FC<{ plan: PricingPlan; index: number }> = ({ plan, ind
           transition={{ delay: 0.3, type: "spring", stiffness: 500 }}
         >
           <motion.span
-            className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 text-white text-sm font-bold shadow-lg shadow-orange-500/30"
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-accent-500 to-accent-700 text-white text-sm font-bold shadow-lg shadow-accent-500/30"
             whileHover={{ scale: 1.05 }}
             animate={{
-              boxShadow: ['0 0 20px rgba(251, 191, 36, 0.3)', '0 0 40px rgba(251, 191, 36, 0.6)', '0 0 20px rgba(251, 191, 36, 0.3)'],
+              boxShadow: ['0 0 20px rgba(205, 33, 42, 0.3)', '0 0 40px rgba(205, 33, 42, 0.6)', '0 0 20px rgba(205, 33, 42, 0.3)'],
             }}
             transition={{ duration: 2, repeat: Infinity }}
           >
@@ -159,9 +159,9 @@ const PricingCard: React.FC<{ plan: PricingPlan; index: number }> = ({ plan, ind
       {/* Plan Icon */}
       <motion.div
         className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 ${
-          plan.popular 
-            ? 'bg-white/20 backdrop-blur-sm' 
-            : 'bg-gradient-to-br from-primary-100 to-purple-100'
+          plan.popular
+            ? 'bg-white/20 backdrop-blur-sm'
+            : 'bg-gradient-to-br from-primary-100 to-primary-200'
         }`}
         whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
         transition={{ duration: 0.5 }}
@@ -239,9 +239,9 @@ const PricingCard: React.FC<{ plan: PricingPlan; index: number }> = ({ plan, ind
           >
             <motion.div
               className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                plan.popular 
-                  ? 'bg-white/20 backdrop-blur-sm' 
-                  : 'bg-gradient-to-br from-primary-400 to-purple-400'
+                plan.popular
+                  ? 'bg-white/20 backdrop-blur-sm'
+                  : 'bg-gradient-to-br from-primary-500 to-primary-600'
               }`}
               whileHover={{ scale: 1.2, rotate: 90 }}
               transition={{ duration: 0.3 }}
@@ -272,8 +272,8 @@ const PricingCard: React.FC<{ plan: PricingPlan; index: number }> = ({ plan, ind
         }}
         className={`w-full inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl font-bold transition-all duration-300 group relative overflow-hidden ${
           plan.popular
-            ? 'bg-white text-purple-700 hover:text-purple-800 shadow-lg shadow-white/30'
-            : 'bg-gradient-to-r from-primary-600 to-purple-600 text-white hover:from-primary-700 hover:to-purple-700 shadow-md hover:shadow-xl'
+            ? 'bg-white text-primary-700 hover:text-primary-800 shadow-lg shadow-white/30'
+            : 'bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:from-primary-700 hover:to-primary-800 shadow-md hover:shadow-xl'
         }`}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
@@ -312,14 +312,14 @@ const Pricing = () => {
   return (
     <section
       id="pricing"
-      className="section-padding bg-gradient-to-br from-gray-50 via-white to-purple-50/30 relative overflow-hidden"
+      className="section-padding bg-gradient-to-br from-cream-100 via-white to-primary-50/40 relative overflow-hidden"
       aria-label="Nos tarifs"
     >
       {/* Dynamic Background */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Animated Gradient Orbs */}
         <motion.div
-          className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-gradient-to-r from-purple-300/20 to-pink-300/20 rounded-full blur-3xl"
+          className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-gradient-to-r from-primary-300/25 to-primary-400/15 rounded-full blur-3xl"
           animate={{
             x: [0, 100, -100, 0],
             y: [0, -100, 100, 0],
@@ -331,7 +331,7 @@ const Pricing = () => {
           }}
         />
         <motion.div
-          className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-gradient-to-r from-blue-300/20 to-cyan-300/20 rounded-full blur-3xl"
+          className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-gradient-to-r from-accent-300/20 to-accent-400/15 rounded-full blur-3xl"
           animate={{
             x: [0, -100, 100, 0],
             y: [0, 100, -100, 0],
@@ -343,7 +343,7 @@ const Pricing = () => {
           }}
         />
         <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-indigo-300/10 to-violet-300/10 rounded-full blur-3xl"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-primary-300/10 to-cream-300/10 rounded-full blur-3xl"
           animate={{
             scale: [1, 1.2, 1],
             rotate: [0, 90, 0],
@@ -374,16 +374,16 @@ const Pricing = () => {
           className="text-center mb-16"
         >
           <motion.span
-            className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 text-sm font-semibold mb-6 shadow-lg shadow-purple-200/30"
+            className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-gradient-to-r from-primary-100 to-accent-100 text-primary-700 text-sm font-semibold mb-6 shadow-lg shadow-primary-200/30"
             whileHover={{ scale: 1.05 }}
             animate={{
-              boxShadow: ['0 0 20px rgba(147, 51, 234, 0.1)', '0 0 40px rgba(147, 51, 234, 0.2)', '0 0 20px rgba(147, 51, 234, 0.1)'],
+              boxShadow: ['0 0 20px rgba(0, 140, 69, 0.1)', '0 0 40px rgba(0, 140, 69, 0.2)', '0 0 20px rgba(0, 140, 69, 0.1)'],
             }}
             transition={{ duration: 2, repeat: Infinity }}
           >
-            <Sparkles size={16} className="text-purple-500" />
+            <Sparkles size={16} className="text-primary-500" />
             {pricingContent.sectionTitle}
-            <Sparkles size={16} className="text-purple-500" />
+            <Sparkles size={16} className="text-accent-500" />
           </motion.span>
 
           <motion.h2
@@ -393,9 +393,6 @@ const Pricing = () => {
             transition={{ delay: 0.2, duration: 0.6 }}
           >
             {pricingContent.heading}
-            <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              {' '}Perfect Fit
-            </span>
           </motion.h2>
 
           <motion.p

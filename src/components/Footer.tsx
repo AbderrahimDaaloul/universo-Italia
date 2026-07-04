@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import {
-  GraduationCap,
   Phone,
   Mail,
   MapPin,
@@ -8,6 +7,8 @@ import {
 } from 'lucide-react';
 import { FaFacebookF, FaInstagram, FaLinkedinIn } from 'react-icons/fa';
 import { footerContent } from '../data/content';
+import { MARBLE_VEINS } from './ItalianDecor';
+import logo1 from '../assets/logo1.png';
 
 /**
  * Dark themed footer with contact info, links, and newsletter
@@ -25,11 +26,23 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-gray-900 text-white relative overflow-hidden">
+    <footer className="bg-gradient-to-b from-[#0D3D24] via-[#072A18] to-[#02100A] text-white relative overflow-hidden">
+      {/* Italian tricolore top strip */}
+      <div className="tricolore-strip absolute top-0 left-0 z-20 animate-tricolore">
+        <span className="bg-italian-green" />
+        <span className="bg-white" />
+        <span className="bg-italian-red" />
+      </div>
+
       {/* Background Decorations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary-600/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-accent-400/10 rounded-full blur-3xl" />
+        {/* Faint marble veins for luxury texture */}
+        <div
+          className="absolute inset-0 opacity-[0.05]"
+          style={{ backgroundImage: MARBLE_VEINS, backgroundSize: 'cover' }}
+        />
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary-500/15 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-accent-600/10 rounded-full blur-3xl" />
       </div>
 
       <div className="container-custom relative z-10">
@@ -43,15 +56,14 @@ const Footer = () => {
             transition={{ duration: 0.6 }}
             className="lg:col-span-1"
           >
-            <a href="#hero" className="flex items-center gap-2 mb-4 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center group-hover:scale-110 transition-transform">
-                <GraduationCap className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-xl font-bold font-heading">
-                Universo<span className="text-primary-400">Italia</span>
-              </span>
+            <a href="#hero" className="inline-flex items-center mb-4 group">
+              <img
+                src={logo1}
+                alt="Logo UniversoItalia"
+                className="h-20 w-auto object-contain group-hover:scale-105 transition-transform"
+              />
             </a>
-            <p className="text-gray-400 text-sm leading-relaxed mb-6">
+            <p className="text-parchment/70 text-sm leading-relaxed mb-6">
               {footerContent.description}
             </p>
             {/* Social Links */}
@@ -64,7 +76,7 @@ const Footer = () => {
                 <a
                   key={social.label}
                   href={social.href}
-                  className="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-primary-600 hover:text-white transition-all duration-200"
+                  className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center text-parchment/80 hover:bg-primary-600 hover:text-white transition-all duration-200"
                   aria-label={social.label}
                 >
                   <social.icon size={18} />
@@ -90,7 +102,7 @@ const Footer = () => {
                       e.preventDefault();
                       handleNavClick('#services');
                     }}
-                    className="text-gray-400 hover:text-primary-400 text-sm transition-colors"
+                    className="text-parchment/70 hover:text-white text-sm transition-colors"
                   >
                     {service}
                   </a>
@@ -116,7 +128,7 @@ const Footer = () => {
                       e.preventDefault();
                       handleNavClick(link.href);
                     }}
-                    className="text-gray-400 hover:text-primary-400 text-sm transition-colors"
+                    className="text-parchment/70 hover:text-white text-sm transition-colors"
                   >
                     {link.label}
                   </a>
@@ -138,7 +150,7 @@ const Footer = () => {
                 <Phone size={18} className="text-primary-400 mt-0.5 flex-shrink-0" />
                 <a
                   href={`tel:${footerContent.contact.phone}`}
-                  className="text-gray-400 hover:text-primary-400 text-sm transition-colors"
+                  className="text-parchment/70 hover:text-white text-sm transition-colors"
                 >
                   {footerContent.contact.phone}
                 </a>
@@ -147,27 +159,27 @@ const Footer = () => {
                 <Mail size={18} className="text-primary-400 mt-0.5 flex-shrink-0" />
                 <a
                   href={`mailto:${footerContent.contact.email}`}
-                  className="text-gray-400 hover:text-primary-400 text-sm transition-colors"
+                  className="text-parchment/70 hover:text-white text-sm transition-colors"
                 >
                   {footerContent.contact.email}
                 </a>
               </li>
               <li className="flex items-start gap-3">
                 <MapPin size={18} className="text-primary-400 mt-0.5 flex-shrink-0" />
-                <span className="text-gray-400 text-sm">{footerContent.contact.address}</span>
+                <span className="text-parchment/70 text-sm">{footerContent.contact.address}</span>
               </li>
             </ul>
           </motion.div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-gray-800 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-gray-500 text-sm text-center sm:text-left">
+        <div className="border-t border-white/10 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-parchment/50 text-sm text-center sm:text-left">
             {footerContent.copyright}
           </p>
           <button
             onClick={scrollToTop}
-            className="w-10 h-10 rounded-full bg-primary-600 flex items-center justify-center text-white hover:bg-primary-700 transition-colors"
+            className="w-10 h-10 rounded-full bg-accent-600 flex items-center justify-center text-white hover:bg-accent-700 shadow-lg shadow-accent-600/25 transition-colors"
             aria-label="Retour en haut"
           >
             <ArrowUp size={20} />

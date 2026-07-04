@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Home from './pages/Home';
 import ScrollToTop from './components/ScrollToTop';
@@ -9,7 +9,7 @@ import ScrollToTop from './components/ScrollToTop';
  */
 function App() {
   return (
-    <Router basename="/universo-Italia">
+    <Router>
       <Toaster
         position="top-right"
         toastOptions={{

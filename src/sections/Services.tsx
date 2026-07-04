@@ -8,10 +8,10 @@ import { useScrollAnimation } from '../hooks/useScrollAnimation';
 // Helper for beautiful fallback gradients if an image is missing
 const getFallbackGradient = (id: number) => {
   const gradients = [
-    'from-indigo-400 via-purple-400 to-pink-400',
-    'from-blue-400 via-indigo-400 to-purple-400',
-    'from-emerald-400 via-teal-400 to-cyan-400',
-    'from-orange-400 via-pink-400 to-purple-400',
+    'from-primary-400 via-primary-500 to-primary-700',
+    'from-primary-500 via-emerald-400 to-primary-600',
+    'from-accent-400 via-accent-500 to-accent-700',
+    'from-primary-500 via-cream-200 to-accent-500',
   ];
   return gradients[(id - 1) % gradients.length];
 };
@@ -57,8 +57,15 @@ const ServiceCard: React.FC<{ service: Service; index: number }> = ({ service, i
       whileInView="visible"
       viewport={{ once: true, margin: '-50px' }}
       variants={cardVariants}
-      className="group relative bg-white/70 backdrop-blur-xl rounded-3xl border border-slate-200/60 shadow-xl shadow-slate-200/40 hover:shadow-2xl hover:shadow-indigo-200/30 hover:-translate-y-2 transition-all duration-500 ease-out flex flex-col"
+      className="group relative bg-white/70 backdrop-blur-xl rounded-3xl border border-slate-200/60 shadow-xl shadow-slate-200/40 hover:shadow-2xl hover:shadow-primary-200/40 hover:-translate-y-2 transition-all duration-500 ease-out flex flex-col overflow-hidden"
     >
+      {/* Italian flag accent strip */}
+      <div className="tricolore-strip absolute top-0 left-0 z-20 opacity-90">
+        <span className="bg-italian-green" />
+        <span className="bg-white" />
+        <span className="bg-italian-red" />
+      </div>
+
       {/* Image Area */}
       <div className="relative h-48 w-full overflow-hidden rounded-t-3xl">
         {service.image ? (
@@ -86,7 +93,7 @@ const ServiceCard: React.FC<{ service: Service; index: number }> = ({ service, i
       {/* Content Area */}
       <div className="relative p-8 flex flex-col flex-grow">
         {/* Overlapping Icon Container */}
-        <div className="absolute -top-8 left-8 w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:shadow-xl group-hover:shadow-indigo-500/40 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 z-20">
+        <div className="absolute -top-8 left-8 w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-600 to-primary-800 flex items-center justify-center shadow-lg shadow-primary-500/30 group-hover:shadow-xl group-hover:shadow-primary-500/40 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 z-20">
           <Icon className="w-8 h-8 text-white" />
         </div>
 
@@ -113,7 +120,7 @@ const ServiceCard: React.FC<{ service: Service; index: number }> = ({ service, i
                   transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1.0] }}
                   className="overflow-hidden"
                 >
-                  <ul className="space-y-3 pl-4 border-l-2 border-indigo-100">
+                  <ul className="space-y-3 pl-4 border-l-2 border-primary-100">
                     {service.details.map((detail, i) => (
                       <motion.li 
                         key={detail} 
@@ -123,7 +130,7 @@ const ServiceCard: React.FC<{ service: Service; index: number }> = ({ service, i
                         variants={detailVariants}
                         className="flex items-start gap-3 text-sm text-slate-600"
                       >
-                        <span className="w-2 h-2 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 mt-1.5 flex-shrink-0 ring-2 ring-indigo-50" />
+                        <span className="w-2 h-2 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 mt-1.5 flex-shrink-0 ring-2 ring-primary-50" />
                         <span>{detail}</span>
                       </motion.li>
                     ))}
@@ -134,7 +141,7 @@ const ServiceCard: React.FC<{ service: Service; index: number }> = ({ service, i
 
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="inline-flex items-center gap-2 text-indigo-600 font-semibold text-sm hover:text-indigo-700 transition-colors group/btn focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 rounded-md px-2 py-1 -ml-2"
+              className="inline-flex items-center gap-2 text-primary-600 font-semibold text-sm hover:text-primary-700 transition-colors group/btn focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 rounded-md px-2 py-1 -ml-2"
               aria-expanded={isExpanded}
             >
               {isExpanded ? 'Voir moins' : 'En Savoir Plus'}
@@ -142,7 +149,7 @@ const ServiceCard: React.FC<{ service: Service; index: number }> = ({ service, i
                 animate={{ rotate: isExpanded ? 180 : 0 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
               >
-                <ChevronDown size={16} className="text-indigo-500 group-hover/btn:text-indigo-700 transition-colors" />
+                <ChevronDown size={16} className="text-primary-500 group-hover/btn:text-primary-700 transition-colors" />
               </motion.div>
             </button>
           </div>
@@ -171,13 +178,13 @@ const Services = () => {
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 opacity-40 [background-image:radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:20px_20px]" />
         
-        <motion.div 
-          className="absolute top-1/4 -left-20 w-96 h-96 bg-indigo-200/40 rounded-full blur-3xl"
+        <motion.div
+          className="absolute top-1/4 -left-20 w-96 h-96 bg-primary-200/40 rounded-full blur-3xl"
           animate={{ scale: [1, 1.1, 1], x: [0, 20, 0], y: [0, -20, 0] }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
         />
-        <motion.div 
-          className="absolute bottom-1/4 -right-20 w-96 h-96 bg-purple-200/40 rounded-full blur-3xl"
+        <motion.div
+          className="absolute bottom-1/4 -right-20 w-96 h-96 bg-accent-200/40 rounded-full blur-3xl"
           animate={{ scale: [1, 1.2, 1], x: [0, -30, 0], y: [0, 20, 0] }}
           transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 }}
         />
@@ -197,11 +204,11 @@ const Services = () => {
             transition={{ delay: 0.2, duration: 0.4 }}
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-sm border border-slate-200/60 shadow-sm text-slate-600 text-sm font-medium mb-6"
           >
-            <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-primary-500 animate-pulse" />
             {servicesContent.sectionTitle}
           </motion.span>
           
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-900 max-w-3xl mx-auto leading-tight mb-6">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-slate-900 via-primary-800 to-accent-800 max-w-3xl mx-auto leading-tight mb-6">
             {servicesContent.heading}
           </h2>
           
@@ -218,8 +225,8 @@ const Services = () => {
           className="text-center mb-16"
         >
           <div className="inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-white/60 backdrop-blur-md border border-slate-200/60 shadow-lg shadow-slate-200/20 max-w-2xl mx-auto">
-            <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center flex-shrink-0">
-              <Sparkles size={16} className="text-indigo-600" />
+            <div className="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center flex-shrink-0">
+              <Sparkles size={16} className="text-primary-600" />
             </div>
             <span className="text-sm text-slate-700 font-medium text-left">
               {servicesContent.note}

@@ -1,11 +1,12 @@
-import { motion, useInView } from 'framer-motion';
-import { 
-  TrendingUp, Users, Award, Clock, Sparkles, 
+import { motion, useInView, useScroll, useTransform } from 'framer-motion';
+import {
+  TrendingUp, Users, Award, Clock, Sparkles,
   Target, BarChart,
-  Globe, Shield, Star 
+  Globe, Shield, Star
 } from 'lucide-react';
 import { statisticsContent } from '../data/content';
 import { useEffect, useRef, useState } from 'react';
+import { OliveBranch, MARBLE_VEINS } from '../components/ItalianDecor';
 
 // Enhanced constants
 const ANIMATION_DURATION = 0.6;
@@ -14,45 +15,45 @@ const VIEWPORT_MARGIN = '-50px';
 
 // Enhanced stat icon mapping with colors
 const statIconMap: Record<string, { icon: any; color: string; gradient: string }> = {
-  'projects': { 
-    icon: TrendingUp, 
-    color: 'text-blue-400',
-    gradient: 'from-blue-500 to-cyan-500'
+  'projects': {
+    icon: TrendingUp,
+    color: 'text-primary-300',
+    gradient: 'from-primary-500 to-primary-700'
   },
-  'clients': { 
-    icon: Users, 
-    color: 'text-purple-400',
-    gradient: 'from-purple-500 to-pink-500'
+  'clients': {
+    icon: Users,
+    color: 'text-primary-300',
+    gradient: 'from-primary-500 to-primary-600'
   },
-  'experience': { 
-    icon: Award, 
-    color: 'text-yellow-400',
-    gradient: 'from-yellow-500 to-orange-500'
+  'experience': {
+    icon: Award,
+    color: 'text-accent-300',
+    gradient: 'from-accent-500 to-accent-700'
   },
-  'support': { 
-    icon: Clock, 
-    color: 'text-green-400',
-    gradient: 'from-green-500 to-emerald-500'
+  'support': {
+    icon: Clock,
+    color: 'text-olive-light',
+    gradient: 'from-olive-light to-olive-dark'
   },
-  'success': { 
-    icon: Target, 
-    color: 'text-red-400',
-    gradient: 'from-red-500 to-pink-500'
+  'success': {
+    icon: Target,
+    color: 'text-accent-300',
+    gradient: 'from-accent-500 to-tuscan'
   },
-  'growth': { 
-    icon: BarChart, 
-    color: 'text-indigo-400',
-    gradient: 'from-indigo-500 to-purple-500'
+  'growth': {
+    icon: BarChart,
+    color: 'text-primary-300',
+    gradient: 'from-primary-500 to-primary-700'
   },
-  'global': { 
-    icon: Globe, 
-    color: 'text-cyan-400',
-    gradient: 'from-cyan-500 to-blue-500'
+  'global': {
+    icon: Globe,
+    color: 'text-accent-300',
+    gradient: 'from-accent-500 to-tuscan-dark'
   },
-  'security': { 
-    icon: Shield, 
-    color: 'text-emerald-400',
-    gradient: 'from-emerald-500 to-teal-500'
+  'security': {
+    icon: Shield,
+    color: 'text-olive-light',
+    gradient: 'from-olive to-olive-dark'
   },
 };
 
@@ -66,16 +67,22 @@ const StatCard: React.FC<{
 }> = ({ stat, index, isVisible }) => {
   const [isHovered, setIsHovered] = useState(false);
   
-  // Get dynamic icon styling
+  // Balanced Italian palette rotated per card so the row isn't monotone green
+  const tilePalette = [
+    { color: 'text-white', gradient: 'from-primary-400 to-primary-700' },    // green tile
+    { color: 'text-primary-700', gradient: 'from-white to-primary-100' },    // white tile
+    { color: 'text-white', gradient: 'from-accent-500 to-accent-700' },      // red tile
+    { color: 'text-white', gradient: 'from-primary-500 to-olive-dark' },     // green/olive tile
+  ];
+
+  // Get dynamic icon styling (keep mapped icon, rotate the tile colour by index)
   const getIconStyle = (label: string) => {
-    const key = Object.keys(statIconMap).find(k => 
+    const key = Object.keys(statIconMap).find(k =>
       label.toLowerCase().includes(k) || stat.label?.toLowerCase().includes(k)
     );
-    return key ? statIconMap[key] : { 
-      icon: Star, 
-      color: 'text-primary-400',
-      gradient: 'from-primary-500 to-purple-500'
-    };
+    const base = key ? statIconMap[key] : { icon: Star };
+    const palette = tilePalette[index % tilePalette.length];
+    return { icon: base.icon, ...palette };
   };
 
   const iconStyle = getIconStyle(stat.label);
@@ -158,7 +165,7 @@ const StatCard: React.FC<{
           }}
           transition={{ duration: 0.5 }}
         >
-          <StatIcon className="w-10 h-10 text-white" />
+          <StatIcon className={`w-10 h-10 ${iconStyle.color}`} />
           
           {/* Icon Pulse Effect */}
           <motion.div
@@ -179,9 +186,15 @@ const StatCard: React.FC<{
         <div className="relative z-10 text-center">
           <motion.div
             className="text-5xl lg:text-6xl font-extrabold text-white mb-2"
+            style={{
+              textShadow:
+                index % 2 === 0
+                  ? '0 0 24px rgba(0,140,69,0.55), 0 2px 4px rgba(0,0,0,0.35)'
+                  : '0 0 24px rgba(205,33,42,0.5), 0 2px 4px rgba(0,0,0,0.35)',
+            }}
             initial={{ opacity: 0, scale: 0.5 }}
             animate={isVisible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }}
-            transition={{ 
+            transition={{
               delay: 0.3 + index * 0.1,
               type: "spring",
               stiffness: 200,
@@ -247,7 +260,7 @@ const StatCard: React.FC<{
       <motion.div
         className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 pointer-events-none"
         animate={{
-          boxShadow: isHovered ? `0 0 40px rgba(99, 102, 241, 0.2)` : 'none',
+          boxShadow: isHovered ? `0 0 40px rgba(0, 140, 69, 0.35)` : 'none',
         }}
         transition={{ duration: 0.4 }}
       />
@@ -261,6 +274,8 @@ const StatCard: React.FC<{
 const Statistics = () => {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: VIEWPORT_MARGIN });
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
+  const yVeins = useTransform(scrollYProgress, [0, 1], [-70, 70]);
   const [activeView, setActiveView] = useState('all');
 
   // View options
@@ -277,57 +292,48 @@ const Statistics = () => {
       className="section-padding relative overflow-hidden"
       aria-label="Nos statistiques"
     >
-      {/* Dynamic Animated Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary-900 via-indigo-900 to-purple-900" />
-      
-      {/* Animated Gradient Orbs */}
+      {/* ============ Layered luxury background — deep Tuscan green ============ */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0D3D24] via-[#072A18] to-[#02100A]" />
+      {/* Rich green glow from the top */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(120% 80% at 50% -10%, rgba(0,140,69,0.34), rgba(0,89,47,0.1) 45%, transparent 70%)',
+        }}
+      />
+
+      {/* Parallax marble veins */}
+      <motion.div
+        aria-hidden="true"
+        style={{ y: yVeins, backgroundImage: MARBLE_VEINS, backgroundSize: 'cover' }}
+        className="absolute -inset-x-10 -top-10 bottom-0 opacity-[0.07] animate-drift-slow pointer-events-none"
+      />
+
+      {/* Animated green / red glow orbs */}
       <div className="absolute inset-0 pointer-events-none">
         <motion.div
-          className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-3xl"
-          animate={{
-            x: [0, 100, -100, 0],
-            y: [0, -100, 100, 0],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear"
-          }}
+          className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-primary-500/22 rounded-full blur-3xl"
+          animate={{ x: [0, 100, -100, 0], y: [0, -100, 100, 0] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
         />
         <motion.div
-          className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-gradient-to-r from-pink-500/20 to-orange-500/20 rounded-full blur-3xl"
-          animate={{
-            x: [0, -100, 100, 0],
-            y: [0, 100, -100, 0],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "linear"
-          }}
+          className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-accent-700/12 rounded-full blur-3xl"
+          animate={{ x: [0, -100, 100, 0], y: [0, 100, -100, 0] }}
+          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
         />
         <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-indigo-500/10 to-violet-500/10 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 180, 0],
-          }}
-          transition={{
-            duration: 30,
-            repeat: Infinity,
-            ease: "linear"
-          }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-primary-500/10 to-olive/10 rounded-full blur-3xl"
+          animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 0] }}
+          transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
         />
 
-        {/* Floating Stars */}
+        {/* Floating cream motes */}
         {[...Array(20)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-1 h-1 bg-white/20 rounded-full"
-            animate={{
-              y: [0, -100, 0],
-              opacity: [0, 0.5, 0],
-            }}
+            className="absolute w-1 h-1 bg-white/40 rounded-full"
+            animate={{ y: [0, -100, 0], opacity: [0, 0.6, 0] }}
             transition={{
               duration: 5 + Math.random() * 5,
               repeat: Infinity,
@@ -339,13 +345,18 @@ const Statistics = () => {
             }}
           />
         ))}
+
+        {/* Olive branches */}
+        <OliveBranch className="absolute top-16 left-6 w-56 opacity-20 animate-leaf-sway hidden md:block" />
+        <OliveBranch className="absolute bottom-12 right-8 w-64 opacity-15 -scale-x-100 animate-leaf-sway hidden md:block" />
       </div>
 
-      {/* Pattern Overlay */}
+      {/* Vignette for depth */}
       <div
-        className="absolute inset-0 opacity-5"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          background:
+            'radial-gradient(100% 100% at 50% 45%, transparent 55%, rgba(0,0,0,0.5) 100%)',
         }}
       />
 
@@ -359,43 +370,43 @@ const Statistics = () => {
         >
           {/* Badge */}
           <motion.span
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white/90 text-sm font-medium mb-6 shadow-lg shadow-black/10"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white/[0.06] backdrop-blur-sm border border-primary-500/30 text-parchment/90 text-sm font-medium mb-6 shadow-lg shadow-black/20"
             whileHover={{ scale: 1.05 }}
             animate={{
               boxShadow: [
-                '0 0 20px rgba(255,255,255,0.05)',
-                '0 0 40px rgba(255,255,255,0.1)',
-                '0 0 20px rgba(255,255,255,0.05)',
+                '0 0 20px rgba(0,140,69,0.08)',
+                '0 0 40px rgba(0,140,69,0.18)',
+                '0 0 20px rgba(0,140,69,0.08)',
               ],
             }}
             transition={{ duration: 2, repeat: Infinity }}
           >
             <span className="flex items-center gap-2">
               <span className="relative">
-                <span className="w-2.5 h-2.5 rounded-full bg-green-400 inline-block" />
-                <span className="absolute inset-0 w-2.5 h-2.5 rounded-full bg-green-400 animate-ping" />
+                <span className="w-2.5 h-2.5 rounded-full bg-italian-green inline-block" />
+                <span className="absolute inset-0 w-2.5 h-2.5 rounded-full bg-italian-green animate-ping" />
               </span>
               {statisticsContent.badge || "En Direct"}
-              <Sparkles size={14} className="text-yellow-400" />
+              <Sparkles size={14} className="text-italian-red" />
             </span>
           </motion.span>
 
           {/* Heading with Gradient Text */}
           <motion.h2
-            className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white max-w-4xl mx-auto leading-tight mb-4"
+            className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-parchment max-w-4xl mx-auto leading-tight mb-4"
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ delay: 0.2, duration: 0.6 }}
           >
             {statisticsContent.heading}
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400">
+            <span className="block text-cream-shimmer bg-size-200 mt-1">
               Nos Chiffres Clés
             </span>
           </motion.h2>
 
           {/* Description */}
           <motion.p
-            className="text-lg text-white/70 max-w-2xl mx-auto"
+            className="text-lg text-parchment/70 max-w-2xl mx-auto font-light"
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : { opacity: 0 }}
             transition={{ delay: 0.4, duration: 0.6 }}
@@ -418,8 +429,8 @@ const Statistics = () => {
               className={`
                 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300
                 ${activeView === view.id
-                  ? 'bg-white/20 backdrop-blur-sm text-white shadow-lg shadow-black/20 border border-white/30'
-                  : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white/90 border border-white/10'
+                  ? 'bg-white text-primary-800 shadow-lg shadow-black/25 border border-white'
+                  : 'bg-white/5 text-parchment/60 hover:bg-white/10 hover:text-parchment/90 border border-white/10'
                 }
               `}
               whileHover={{ scale: 1.05 }}
@@ -458,7 +469,7 @@ const Statistics = () => {
               {[1, 2, 3, 4].map((i) => (
                 <motion.div
                   key={i}
-                  className="w-8 h-8 rounded-full border-2 border-white/20 bg-gradient-to-br from-blue-400 to-purple-400 flex items-center justify-center text-white text-xs font-bold"
+                  className="w-8 h-8 rounded-full border-2 border-white/30 bg-gradient-to-br from-primary-600 to-accent-600 flex items-center justify-center text-white text-xs font-bold"
                   whileHover={{ scale: 1.2, zIndex: 10 }}
                 >
                   {String.fromCharCode(64 + i)}
@@ -487,7 +498,7 @@ const Statistics = () => {
               {[...Array(5)].map((_, i) => (
                 <motion.svg
                   key={i}
-                  className="w-4 h-4 text-yellow-400"
+                  className="w-4 h-4 text-italian-red"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                   initial={{ opacity: 0, scale: 0 }}
