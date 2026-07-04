@@ -1,11 +1,16 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+
+// Vercel serves the site at the root ("/"); GitHub Pages serves it under
+// "/universo-Italia/". Vercel sets the VERCEL env var during its build, so we
+// pick the right base automatically for each host.
+const base = process.env.VERCEL ? '/' : '/universo-Italia/';
+
 export default defineConfig({
     plugins: [react()],
-    base: '/universo-Italia/',
+    base,
     server: {
         port: 3000,
-        open: '/universo-Italia/',
     },
     build: {
         sourcemap: true,
