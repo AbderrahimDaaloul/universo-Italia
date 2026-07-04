@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/universo-Italia/(.*)", "destination": "/universo-Italia/index.html" }
+  ]
+}
